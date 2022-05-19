@@ -1,3 +1,3 @@
 # Prospects-of-LGWs
 Project 
-(inspired from @anhitz work on premerger detection)
+(inspired from @ahnitz work on premerger detection)
