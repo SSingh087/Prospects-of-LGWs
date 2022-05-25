@@ -23,8 +23,6 @@ def get_flow(time, m1, m2):
 def precalc(num_event):
 
     time = tc[num_event]
-    mchirp = mchirps[num_event]
-    cov = cv[num_event]
     ifos = []
     for ifo in opts.instruments:
         ifos.append(ifo)

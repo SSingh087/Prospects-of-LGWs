@@ -11,6 +11,7 @@ from multiprocessing import Pool
 import configparser
 import pycbc.psd
 from copy import copy
+from lgw import *
 
 def get_flow(time, m1, m2):
     def dt(flow):
@@ -31,15 +32,15 @@ def precalc(num_event):
     from pycbc.detector import Detector
     from pycbc import waveform
     from pycbc.filter import sigma
+
     
     zl = 0.5
-    if zl > z[num_event]:
-    	waveform.add_custom_waveform('lensed', lensed_gw_td, 'time', force=True)
-
-		hp, hc = waveform.get_fd_waveform(
-                approximant="lensed", source_ra=ra[num_event], source_dec=dec[num_event], 
-                lens_ra=ra[num_event], lens_dec=ra[num_event]+0.3, 
-                zs=z[num_event], zl=, mL=1E8, lens_model_list=['POINT_MASS'],
+    if zl < z[num_event]:
+        waveform.add_custom_waveform('lensed', lensed_gw_fd, 'frequency', force=True)
+        hp, hc = waveform.get_fd_waveform(
+                approximant='lensed', source_ra=ra[num_event], source_dec=dec[num_event], 
+                lens_ra=ra[num_event]+0.1, lens_dec=ra[num_event]+0.2, 
+                zs=z[num_event], zl=zl, mL=1e6, lens_model_list=['POINT_MASS'],
 				mass1=m1s[num_event], mass2=m2s[num_event], inclination=inc[num_event],
 	            f_lower=1.0, delta_f=df, distance=dist[num_event])
     
@@ -65,6 +66,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--injection-file-lens-dir")
 parser.add_argument("--injection-file-unlens-dir")
 parser.add_argument("--injection-file")
+parser.add_argument("--inference-config")
 parser.add_argument("--instruments", nargs='*')
 
 # since data is copied from unlens population to lensed population
