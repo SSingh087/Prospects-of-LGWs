@@ -23,8 +23,6 @@ def get_flow(time, m1, m2):
 def precalc(num_event):
 
     time = tc[num_event]
-    m1 = m1s[num_event]
-    m2 = m2s[num_event]
     mchirp = mchirps[num_event]
     cov = cv[num_event]
     ifos = []
@@ -36,7 +34,7 @@ def precalc(num_event):
     from pycbc.waveform import get_fd_waveform
     from pycbc.filter import sigma
     hp, hc = get_fd_waveform(approximant="TaylorF2", 
-                             mass1=m1, mass2=m2, inclination=inc[num_event],
+                             mass1=m1s[num_event], mass2=m2s[num_event], inclination=inc[num_event],
                              f_lower=1.0, delta_f=df, distance=dist[num_event])
 
     nsnr = 0
@@ -120,7 +118,7 @@ for num_event in range(len(tc)):
         print(num_event, nsnrs[num_event], ifos)
 
     # make individual trig ini files
-    path = 'injections-unlens/inj_%s.ini' % num_event
+    path = './injection/inj_%s.ini' % num_event
     f = open(path, 'w')
     f.write("""
 [data]
@@ -138,6 +136,6 @@ maxcov = %s
 """ % (time, injpath, instr, m1, m2, mchirp - .0001, mchirp + .0001, cov / 10.0, cov * 10.0))
     f.close()
 
-o = h5py.File('./snrs_lensed.hdf', 'w')
+o = h5py.File('./snrs.hdf', 'w')
 o['snrs'] = nsnrs
     
