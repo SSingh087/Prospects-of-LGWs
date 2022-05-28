@@ -12,13 +12,6 @@ import configparser
 import pycbc.psd
 from copy import copy
 
-def get_flow(time, m1, m2):
-    def dt(flow):
-        t = spa_length_in_time(mass1=m1, mass2=m2, f_lower=flow, phase_order=-1) 
-        return abs(t - time)
-    res = minimize_scalar(dt, [1, 60])
-    return res['x']
-
 # loop over number of loudest events to be analyzed
 def precalc(num_event):
 
@@ -98,7 +91,7 @@ data = pool.map(precalc, range(len(tc)))
 
 nsnrs = numpy.array([t[0] for t in data])
 ifoss = numpy.array([t[1] for t in data])
-
+sequence = []
 for num_event in range(len(tc)):
     time = tc[num_event]
     m1 = m1s[num_event]
@@ -115,6 +108,7 @@ for num_event in range(len(tc)):
     else:
         print(num_event, nsnrs[num_event], ifos)
 
+    sequence.append(num_event)
     # make individual trig ini files
     path = './injection/inj_%s.ini' % num_event
     f = open(path, 'w')
@@ -135,5 +129,6 @@ maxcov = %s
     f.close()
 
 o = h5py.File('./snrs.hdf', 'w')
+o['seq'] = sequence
 o['snrs'] = nsnrs
     

@@ -49,7 +49,8 @@ def precalc(num_event):
     from pycbc.filter import sigma
     
     zL = 0.5
-    if zL < z[num_event]:
+    # RUN THIS ISSUE ON CLUSTER
+    if z[num_event]-zL > 0.5:
         waveform.add_custom_waveform('lensed', lensed_gw_fd, 'frequency', force=True)
         hp, hc = waveform.get_fd_waveform(
                 approximant='lensed', source_ra=ra[num_event], source_dec=dec[num_event], 
@@ -148,7 +149,7 @@ for ifo in mopt:
     print(ifo, mopt[ifo]) # printing PSDs corresponding to ifos
     psds[ifo] = pycbc.psd.from_string(mopt[ifo], flen, df, flow[ifo])
 
-pool = Pool(8)
+pool = Pool(4)
 data = pool.map(precalc, range(len(tc)))
 
 nsnrs = numpy.array([t[0] for t in data])
@@ -158,8 +159,6 @@ ifoss = numpy.array([t[3] for t in data])
 tds = numpy.array([t[4] for t in data])
 muss = numpy.array([t[5] for t in data])
 
-count_no_image = numpy.count_nonzero(nsnrs==-1)
-count_redshift_prox = numpy.count_nonzero(nsnrs==0)
 sequence = []
 for num_event in range(len(tc)):
     time = tc[num_event]

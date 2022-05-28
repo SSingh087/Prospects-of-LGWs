@@ -1,4 +1,4 @@
-#cp /home/ss/Prospects-of-LGWs/unlens/injection.hdf ./ --verbose
+cp /home/ss/Prospects-of-LGWs/unlens/injection.hdf ./ --verbose
 
 /home/ss/Prospects-of-LGWs/lens/evaluate_SNR \
 --injection-file-lens-dir /home/ss/Prospects-of-LGWs/lens/injection \
