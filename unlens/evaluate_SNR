@@ -48,6 +48,7 @@ def precalc(num_event):
 # command line parser
 parser = argparse.ArgumentParser()
 parser.add_argument("--injection-file")
+parser.add_argument("--output-dir")
 parser.add_argument("--instruments", nargs='*')
 parser.add_argument("--inference-config")
 
@@ -56,6 +57,8 @@ pycbc.init_logging(True)
 opts = parser.parse_args()
 f = h5py.File(opts.injection_file, 'r')
 injpath = os.path.abspath(opts.injection_file)
+
+os.mkdir(opts.output_dir)
 
 tc = f['tc'][:]
 m1s = f['mass1'][:]
@@ -74,6 +77,7 @@ cp.read(opts.inference_config)
 
 flow = cp.get('model', 'low-frequency-cutoff').split(' ')
 flow = {f.split(':')[0]: float(f.split(':')[1]) for f in flow}
+
 df = 1.0 / 8192
 fmax = 256
 flen = int(fmax / df)
@@ -86,11 +90,20 @@ for ifo in mopt:
     print(ifo, mopt[ifo]) # printing PSDs corresponding to ifos
     psds[ifo] = pycbc.psd.from_string(mopt[ifo], flen, df, flow[ifo])
 
+mopt = cp.get('data', 'fake-strain-from-file').split(' ')
+mopt = {f.split(':')[0]: f.split(':')[1] for f in mopt}
+for ifo in mopt:
+    print(ifo, mopt[ifo])
+    psds[ifo] = pycbc.psd.from_txt(mopt[ifo], flen, df, flow[ifo], is_asd_file=True)
+
 pool = Pool(4)
 data = pool.map(precalc, range(len(tc)))
 
 nsnrs = numpy.array([t[0] for t in data])
 ifoss = numpy.array([t[1] for t in data])
+
+os.chdir(opts.output_dir)
+os.mkdir('injection/')
 
 for num_event in range(len(tc)):
     time = tc[num_event]
@@ -130,4 +143,4 @@ maxcov = %s
 o = h5py.File('./snrs.hdf', 'w')
 
 o['snrs'] = nsnrs
-    
+os.chdir('../')
