@@ -1,5 +1,5 @@
 pycbc_create_injections --verbose \
-			--ninjections 50 \
+			--ninjections 100 \
 			--config-files inj.ini \
 			--output-file injection.hdf \
 			--force \
