@@ -91,7 +91,7 @@ data = pool.map(precalc, range(len(tc)))
 
 nsnrs = numpy.array([t[0] for t in data])
 ifoss = numpy.array([t[1] for t in data])
-sequence = []
+
 for num_event in range(len(tc)):
     time = tc[num_event]
     m1 = m1s[num_event]
@@ -108,7 +108,6 @@ for num_event in range(len(tc)):
     else:
         print(num_event, nsnrs[num_event], ifos)
 
-    sequence.append(num_event)
     # make individual trig ini files
     path = './injection/inj_%s.ini' % num_event
     f = open(path, 'w')
@@ -129,6 +128,6 @@ maxcov = %s
     f.close()
 
 o = h5py.File('./snrs.hdf', 'w')
-o['seq'] = sequence
+
 o['snrs'] = nsnrs
     
