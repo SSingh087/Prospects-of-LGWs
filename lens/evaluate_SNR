@@ -26,7 +26,7 @@ def eval_time_delay_mag(source_ra, source_dec, lens_ra, lens_dec, zS, zL, mL, le
     Img_ra, Img_dec, kwargs_lens_list, solver_kwargs = lens_waveform_model.eval_param(
                                                             source_ra, source_dec, [lens_ra], [lens_dec],
                                                             zS, zL, [mL], lens_model_list, optim)
-                
+
     td = TimeDelay(Img_ra, Img_dec, source_ra=source_ra, source_dec=source_dec,
                    zS=zS, zL=zL, lens_model_list=lens_model_list, kwargs_lens_list=kwargs_lens_list,
                    scaled=solver_kwargs['Scaled'], scale_factor=solver_kwargs['ScaleFactor'])
@@ -50,12 +50,12 @@ def precalc(num_event):
     
     zL = 0.5
     # RUN THIS ISSUE ON CLUSTER
-    if z[num_event]-zL > 0.5:
+    if z[num_event]-zL > 1.:
         waveform.add_custom_waveform('lensed', lensed_gw_fd, 'frequency', force=True)
         hp, hc = waveform.get_fd_waveform(
-                approximant='lensed', source_ra=ra[num_event], source_dec=dec[num_event], 
-                lens_ra=ra[num_event]+0.1, lens_dec=ra[num_event]+0.2, 
-                zS=z[num_event], zL=zL, mL=1e12, lens_model_list=['POINT_MASS'],
+                approximant='lensed', source_ra=ra[num_event], source_dec=dec[num_event],
+                lens_ra=ra[num_event]+0.1, lens_dec=ra[num_event]+0.2,
+                zS=z[num_event], zL=zL, mL=1e6, lens_model_list=['POINT_MASS'],
 				mass1=m1s[num_event], mass2=m2s[num_event], inclination=inc[num_event],
 	            f_lower=1.0, delta_f=df, distance=dist[num_event])
 
@@ -118,7 +118,7 @@ opts = parser.parse_args()
 f = h5py.File(opts.injection_file, 'r')
 injpath = os.path.abspath(opts.injection_file)
 
-os.mkdir(opts.output_dir)
+os.makedirs(opts.output_dir, exist_ok=True)
 
 tc = f['tc'][:]
 m1s = f['mass1'][:]
