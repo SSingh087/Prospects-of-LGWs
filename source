@@ -1,2 +1,2 @@
 source ../lgw/bin/activate
-export PYCBC_DETECTOR_CONFIG=/home/ss/Prospects-of-LGWs/det.ini
+export PYCBC_DETECTOR_CONFIG=/work/shashwat.singh/Prospects-of-LGWs/det.ini

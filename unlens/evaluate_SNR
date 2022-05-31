@@ -58,7 +58,7 @@ opts = parser.parse_args()
 f = h5py.File(opts.injection_file, 'r')
 injpath = os.path.abspath(opts.injection_file)
 
-os.mkdir(opts.output_dir)
+os.makedirs(opts.output_dir, exist_ok=True)
 
 tc = f['tc'][:]
 m1s = f['mass1'][:]
@@ -96,7 +96,7 @@ for ifo in mopt:
     print(ifo, mopt[ifo])
     psds[ifo] = pycbc.psd.from_txt(mopt[ifo], flen, df, flow[ifo], is_asd_file=True)
 
-pool = Pool(4)
+pool = Pool(30)
 data = pool.map(precalc, range(len(tc)))
 
 nsnrs = numpy.array([t[0] for t in data])
