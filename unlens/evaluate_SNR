@@ -24,9 +24,9 @@ def precalc(num_event):
     from pycbc.detector import Detector
     from pycbc.waveform import get_fd_waveform
     from pycbc.filter import sigma
-    hp, hc = get_fd_waveform(approximant="TaylorF2", 
+    hp, hc = get_fd_waveform(approximant="TaylorF2",
                              mass1=m1s[num_event], mass2=m2s[num_event], inclination=inc[num_event],
-                             f_lower=1.0, delta_f=df, distance=dist[num_event])
+                             f_lower=9.0, delta_f=df, distance=dist[num_event])
 
     nsnr = 0
     for ifo in ifos:
@@ -78,8 +78,8 @@ cp.read(opts.inference_config)
 flow = cp.get('model', 'low-frequency-cutoff').split(' ')
 flow = {f.split(':')[0]: float(f.split(':')[1]) for f in flow}
 
-df = 1.0 / 8192
-fmax = 256
+df = 1.0 / 4096
+fmax = 128
 flen = int(fmax / df)
 
 psds = {}
