@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use this software/article, please cite it as below."
+authors:
+- family-names: "SINGH"
+  given-names: "SHASHWAT"
+  orcid: "https://orcid.org/0000-0003-4881-1067"
+title: "Prospects-of-LGWs"
+version: 1.0.0
+doi: 
+date-released: 2022-08-27
+url: "https://github.com/SSingh087/Prospects-of-LGWs"
